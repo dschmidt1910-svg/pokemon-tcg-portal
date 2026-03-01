@@ -31,4 +31,13 @@ export default function Cards() {
             background: card.have ? '#d4f7d4' : '#fff',
             cursor:'pointer'
           }} onClick={() => toggleHave(card.id)}>
-            <img src={card.image} alt={card.name} style={{width:'100
+            <img src={card.image} alt={card.name} style={{width:'100%'}}/>
+            <h3>{card.name}</h3>
+            <p>Set: {card.set}</p>
+            <p>{card.have ? '✔ Habe ich' : 'Noch nicht'}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

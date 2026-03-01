@@ -1,3 +1,5 @@
+'use client' // Next.js 13+ App Router nur client
+
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
@@ -9,20 +11,19 @@ export default function Cards() {
   ])
   const [user, setUser] = useState(null)
 
-  // Prüfen, ob der User eingeloggt ist
+  // Prüfen, ob User eingeloggt ist
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      if(data.user) setUser(data.user)
-      else setUser(null)
+    if(typeof window !== 'undefined') {
+      supabase.auth.getUser().then(({ data }) => {
+        if(data.user) setUser(data.user)
+      })
     }
-    getUser()
   }, [])
 
-  // Toggle „Habe ich“ und speichern in Supabase
+  // Kartenstatus toggle und Supabase speichern
   const toggleHave = async (id) => {
     if(!user) {
-      alert("Bitte erst einloggen!")
+      alert("Bitte zuerst einloggen!")
       return
     }
 
@@ -32,8 +33,7 @@ export default function Cards() {
     })
     setCards(newCards)
 
-    const { error } = await
-supabase
+    const { error } = await supabase
       .from('collection')
       .upsert({ card_id: id, have: newCards.find(c => c.id === id).have, user_id: user.id })
 
@@ -43,7 +43,7 @@ supabase
   return (
     <div style={{padding: 40}}>
       <h1>Deutsche Pokémon Testkarten</h1>
-      {!user && <p style={{color:'red'}}>Bitte zuerst <a href="/login">einloggen</a></p>}
+      {!user && <p style={{color:'red'}}>Bitte erst <a href="/login">einloggen</a></p>}
       <div style={{
         display:'grid',
         gridTemplateColumns:'repeat(auto-fit, minmax(120px, 1fr))',

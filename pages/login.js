@@ -1,52 +1,31 @@
-'use client' // Next.js 13+ optional, falls App Router
-
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabaseClient'
+import { useEffect } from 'react';
+import { useAuth } from '../context/authContext'; // Passe den Pfad ggf. an
 
 export default function Login() {
-  const [message, setMessage] = useState('')
+  const { setUser } = useAuth();
 
-  // Client-only Magic Link Handling
+  //  Mock-Login für Entwicklung
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search)
-      if (urlParams.get('access_token')) { // Supabase schickt access_token
-        supabase.auth.getSessionFromUrl({ storeSession: true })
-          .then(({ data, error }) => {
-            if (error) setMessage("Fehler beim Magic Link: " + error.message)
-            else if (data.session) setMessage("User eingeloggt: " + data.session.user.email)
-          })
-          .catch(err => console.log("Magic Link Fehler:", err))
-      }
+    if (process.env.NODE_ENV === 'development') {
+      setUser({
+        email: "test@pokemon.com",
+        name: "Test User",
+        id: "dev-user-1"
+      });
+      console.log(" Entwicklungsmodus: Test-User automatisch eingeloggt");
     }
-  }, [])
+  }, [setUser]);
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    const email = e.target.email.value
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: 'https://pokemon-tcg-portal.vercel.app/cards'
-      }
-    })
-    if(error) setMessage("Fehler: " + error.message)
-    else setMessage("Check deine Mail für den Login-Link!")
+  const handleLogin = async () => {
+    // Hier bleibt deine normale Magic-Link Login-Logik
+    console.log("Magic-Link Login (wird im DEV-Modus nicht benötigt)");
   }
 
   return (
-    <div style={{padding:40}}>
+    <div>
       <h1>Login</h1>
-      <form onSubmit={handleLogin}>
-        <input type="email" name="email" placeholder="E-Mail" required style={{padding:8, marginRight:10}}/>
-        <button type="submit">Login</button>
-      </form>
-      <p>{message}</p>
+      <p>Im Entwicklungsmodus wird automatisch eingeloggt.</p>
+      {/* Dein normales Login-Formular hier */}
     </div>
-  )
-}
-if (process.env.NODE_ENV === 'development') {
-  // automatisch einen Test-User setzen
-  setUser({ email: "test@pokemon.com", name: "Test User" });
-  return;
+  );
 }

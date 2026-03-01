@@ -1,8 +1,8 @@
 export default function Home() {
   return (
     <div style={{padding: 40}}>
-      <h1>Pokemon TCG Portal</h1>
-      <p>Dein Projekt lebt </p>
+      <h1>Testseite läuft!</h1>
+      <p>Keine API, kein Supabase – nur ein einfacher Test</p>
     </div>
   )
 }

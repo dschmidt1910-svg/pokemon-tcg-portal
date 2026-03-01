@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
 export default function Cards() {
@@ -7,21 +7,46 @@ export default function Cards() {
     { id: 2, name: "Glurak", set: "Base Set", image: "https://images.pokemontcg.io/base1/4.png", have: false },
     { id: 3, name: "Bisasam", set: "Base Set", image: "https://images.pokemontcg.io/base1/1.png", have: false }
   ])
+  const [user, setUser] = useState(null)
 
-  const toggleHave = (id) => {
+  // Prüfen, ob der User eingeloggt ist
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser()
+      if(data.user) setUser(data.user)
+      else setUser(null)
+    }
+    getUser()
+  }, [])
+
+  // Toggle „Habe ich“ und speichern in Supabase
+  const toggleHave = async (id) => {
+    if(!user) {
+      alert("Bitte erst einloggen!")
+      return
+    }
+
     const newCards = cards.map(card => {
       if(card.id === id) card.have = !card.have
       return card
     })
     setCards(newCards)
+
+    const { error } = await
+supabase
+      .from('collection')
+      .upsert({ card_id: id, have: newCards.find(c => c.id === id).have, user_id: user.id })
+
+    if(error) console.log("Fehler beim Speichern:", error.message)
   }
 
   return (
     <div style={{padding: 40}}>
-      <h1>Deutsche Pokémon Testkarten (kleiner)</h1>
+      <h1>Deutsche Pokémon Testkarten</h1>
+      {!user && <p style={{color:'red'}}>Bitte zuerst <a href="/login">einloggen</a></p>}
       <div style={{
         display:'grid',
-        gridTemplateColumns:'repeat(auto-fit, minmax(120px, 1fr))', // kleiner als vorher
+        gridTemplateColumns:'repeat(auto-fit, minmax(120px, 1fr))',
         gap:15
       }}>
         {cards.map(card => (

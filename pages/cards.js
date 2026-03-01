@@ -1,24 +1,9 @@
 export default function Cards() {
   const cards = [
-    {
-      id: 1,
-      name: "Pikachu",
-      set: "Base Set",
-      image: "https://images.pokemontcg.io/base1/58.png"
-    },
-    {
-      id: 2,
-      name: "Glurak",
-      set: "Base Set",
-      image: "https://images.pokemontcg.io/base1/4.png"
-    },
-    {
-      id: 3,
-      name: "Bisasam",
-      set: "Base Set",
-      image: "https://images.pokemontcg.io/base1/1.png"
-    }
-  ]
+    { id: 1, name: "Pikachu", set: "Base Set", image: "https://images.pokemontcg.io/base1/58.png" },
+    { id: 2, name: "Glurak", set: "Base Set", image: "https://images.pokemontcg.io/base1/4.png" },
+    { id: 3, name: "Bisasam", set: "Base Set", image: "https://images.pokemontcg.io/base1/1.png" }
+  ];
 
   return (
     <div style={{padding: 40}}>
@@ -33,5 +18,5 @@ export default function Cards() {
         ))}
       </div>
     </div>
-  )
+  );
 }

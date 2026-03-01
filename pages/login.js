@@ -1,18 +1,23 @@
+'use client' // Next.js 13+ optional, falls App Router
+
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
 export default function Login() {
   const [message, setMessage] = useState('')
 
+  // Client-only Magic Link Handling
   useEffect(() => {
-    // Client-only
-    if(typeof window !== 'undefined') {
-      supabase.auth.getSessionFromUrl({ storeSession: true })
-        .then(({ data, error }) => {
-          if(error) setMessage("Fehler beim Magic Link: " + error.message)
-          else if(data.session) setMessage("User eingeloggt: " + data.session.user.email)
-        })
-        .catch(err => console.log("Magic Link Fehler:", err))
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      if (urlParams.get('access_token')) { // Supabase schickt access_token
+        supabase.auth.getSessionFromUrl({ storeSession: true })
+          .then(({ data, error }) => {
+            if (error) setMessage("Fehler beim Magic Link: " + error.message)
+            else if (data.session) setMessage("User eingeloggt: " + data.session.user.email)
+          })
+          .catch(err => console.log("Magic Link Fehler:", err))
+      }
     }
   }, [])
 

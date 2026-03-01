@@ -1,24 +1,34 @@
-import { useEffect, useState } from 'react'
-
 export default function Cards() {
-  const [cards, setCards] = useState([])
-
-  useEffect(() => {
-    fetch('https://api.pokemontcg.io/v2/cards?pageSize=5&language:de')
-      .then(res => res.json())
-      .then(data => setCards(data.data))
-      .catch(err => console.error(err))
-  }, [])
+  const cards = [
+    {
+      id: 1,
+      name: "Pikachu",
+      set: "Base Set",
+      image: "https://images.pokemontcg.io/base1/58.png"
+    },
+    {
+      id: 2,
+      name: "Glurak",
+      set: "Base Set",
+      image: "https://images.pokemontcg.io/base1/4.png"
+    },
+    {
+      id: 3,
+      name: "Bisasam",
+      set: "Base Set",
+      image: "https://images.pokemontcg.io/base1/1.png"
+    }
+  ]
 
   return (
     <div style={{padding: 40}}>
-      <h1>Test Deutsche Pokémon Karten</h1>
+      <h1>Testkarten (ohne API)</h1>
       <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(150px,1fr))', gap:20}}>
         {cards.map(card => (
           <div key={card.id} style={{border:'1px solid #ccc', padding:10, borderRadius:8}}>
-            <img src={card.images.small} alt={card.name} style={{width:'100%'}}/>
+            <img src={card.image} alt={card.name} style={{width:'100%'}}/>
             <h3>{card.name}</h3>
-            <p>Set: {card.set.name}</p>
+            <p>Set: {card.set}</p>
           </div>
         ))}
       </div>

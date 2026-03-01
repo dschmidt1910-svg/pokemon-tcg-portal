@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <div style={{padding: 40}}>
-      <h1>Testkarten auf Startseite</h1>
+      <h1>Testkarten ohne Supabase</h1>
       <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(150px,1fr))', gap:20}}>
         {cards.map(card => (
           <div key={card.id} style={{border:'1px solid #ccc', padding:10, borderRadius:8}}>
